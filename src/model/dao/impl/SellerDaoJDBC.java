@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SellerDaoJDBC implements SellerDao {
@@ -64,6 +65,104 @@ public class SellerDaoJDBC implements SellerDao {
         }
     }
 
+    @Override
+    public List<Seller> findByDepartmentId(int id) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        List<Seller> sellers = new ArrayList<>();
+        try{
+            st = conn.prepareStatement("SELECT seller.*,department.Name as DepName " +
+                    "FROM seller INNER JOIN department " +
+                    "ON seller.DepartmentId = department.Id " +
+                    "WHERE DepartmentId = ? " +
+                    "ORDER BY Name");
+            st.setInt(1,id);
+
+            rs = st.executeQuery();
+            if(rs.next()) {
+                Department dep = instanciateDepartment(rs);
+                do {
+                    sellers.add(instanciateSeller(rs, dep));
+                }
+                while (rs.next());
+                return sellers;
+            }
+            return null;
+
+        }
+        catch (SQLException e) {
+            throw new DbException("Erro na busca, causado por: " + e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+    }
+
+    public List<Seller> findByDepartment(Department dep) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        List<Seller> sellers = new ArrayList<>();
+        try{
+            st = conn.prepareStatement("SELECT seller.*,department.Name as DepName " +
+                    "FROM seller INNER JOIN department " +
+                    "ON seller.DepartmentId = department.Id " +
+                    "WHERE DepartmentId = ? " +
+                    "ORDER BY Name");
+            st.setInt(1,dep.getId());
+
+            rs = st.executeQuery();
+            if(rs.next()) {
+                do {
+                    sellers.add(instanciateSeller(rs, dep));
+                }
+                while (rs.next());
+                return sellers;
+            }
+            return null;
+
+        }
+        catch (SQLException e) {
+            throw new DbException("Erro na busca, causado por: " + e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+    }
+
+    @Override
+    public List<Seller> findAll() {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        List<Seller> sellers = new ArrayList<>();
+        try{
+            st = conn.prepareStatement("SELECT seller.*,department.Name as DepName " +
+                    "FROM seller INNER JOIN department " +
+                    "ON seller.DepartmentId = department.Id " +
+                    "ORDER BY Name");
+
+            rs = st.executeQuery();
+            if(rs.next()) {
+                Department dep = instanciateDepartment(rs);
+                do {
+                    sellers.add(instanciateSeller(rs, dep));
+                }
+                while (rs.next());
+                return sellers;
+            }
+            return null;
+
+        }
+        catch (SQLException e) {
+            throw new DbException("Erro na busca, causado por: " + e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+            DB.closeResultSet(rs);
+        }
+    }
+
     private Seller instanciateSeller(ResultSet rs, Department dep) throws SQLException {
         Seller obj = new Seller();
         obj.setId(rs.getInt("Id"));
@@ -80,10 +179,5 @@ public class SellerDaoJDBC implements SellerDao {
         dep.setId(rs.getInt("DepartmentId"));
         dep.setName(rs.getString("DepName"));
         return dep;
-    }
-
-    @Override
-    public List<Seller> findAll() {
-        return null;
     }
 }
