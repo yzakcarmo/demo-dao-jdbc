@@ -57,13 +57,49 @@ public class SellerDaoJDBC implements SellerDao {
     }
 
     @Override
-    public void update(Seller dep) {
+    public void update(Seller seller) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("UPDATE seller "
+                    + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                    + "WHERE Id = ?");
 
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, Date.valueOf(seller.getBirthDate()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setInt(5, seller.getDepartment().getId());
+            st.setInt(6, seller.getId());
+
+
+            st.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new DbException("Erro na criação, causado por: " + e.getMessage());
+        }
+        finally {
+
+            DB.closeStatement(st);
+        }
     }
 
     @Override
     public void deleteById(int id) {
+        PreparedStatement st = null;
+        try{
+            st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?",
+                    Statement.RETURN_GENERATED_KEYS);
 
+            st.setInt(1, id);
+
+            int rowsAffected = st.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw new DbException("Erro na criação, causado por: " + e.getMessage());
+        }
+        finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -174,7 +210,7 @@ public class SellerDaoJDBC implements SellerDao {
             st = conn.prepareStatement("SELECT seller.*,department.Name as DepName "
                     + "FROM seller INNER JOIN department "
                     + "ON seller.DepartmentId = department.Id "
-                    + "ORDER BY Name");
+                    + "ORDER BY Id");
 
             rs = st.executeQuery();
             if(rs.next()) {

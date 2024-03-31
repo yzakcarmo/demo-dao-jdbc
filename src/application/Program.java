@@ -38,9 +38,18 @@ public class Program {
 //        System.out.println();
 //
 //        System.out.println("**** Testando insert ****");
-//        seller = new Seller(null,"Teste", "teste@", LocalDate.now(), 1000.0, dep);
+//        seller = new Seller(null,"Teste2", "teste@", LocalDate.now(), 1000.0, dep);
 //        sellerDao.insert(seller);
 //        System.out.println(sellerDao.findById(seller.getId()));
+//        System.out.println();
+
+//        System.out.println("**** Testando update ****");
+//        seller = sellerDao.findById(10);
+//        System.out.println(seller);
+//
+//        seller.setName("Jonas");
+//        sellerDao.update(seller);
+//        System.out.println(sellerDao.findById(10));
 //        System.out.println();
 
         System.out.println("**** Testando delete ****");
