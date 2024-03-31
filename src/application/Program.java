@@ -6,30 +6,47 @@ import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Program {
     public static void main(String[] args) {
         SellerDao sellerDao = DaoFactory.createSellerDao();
-        System.out.println("**** Testando findById ****");
-        Seller seller = sellerDao.findById(1);
-        System.out.println(seller);
-        System.out.println();
+        Department dep = new Department(1,null);
+        Seller seller;
+        List<Seller> sellers;
 
-        System.out.println("**** Testando findByDepartmentId ****");
-        List<Seller> sellers = sellerDao.findByDepartmentId(1);
+//        System.out.println("**** Testando findById ****");
+//        seller = sellerDao.findById(1);
+//        System.out.println(seller);
+//        System.out.println();
+//
+//        System.out.println("**** Testando findByDepartmentId ****");
+//        List<Seller> sellers = sellerDao.findByDepartmentId(1);
+//        for (Seller obj : sellers) System.out.println(obj);
+//        System.out.println();
+//
+//        System.out.println("**** Testando findByDepartment ****");
+//        sellers = sellerDao.findByDepartment(dep);
+//        for (Seller obj : sellers) System.out.println(obj);
+//        System.out.println();
+//
+//        System.out.println("**** Testando findAll ****");
+//        sellers = sellerDao.findAll();
+//        for (Seller obj : sellers) System.out.println(obj);
+//        System.out.println();
+//
+//        System.out.println("**** Testando insert ****");
+//        seller = new Seller(null,"Teste", "teste@", LocalDate.now(), 1000.0, dep);
+//        sellerDao.insert(seller);
+//        System.out.println(sellerDao.findById(seller.getId()));
+//        System.out.println();
+
+        System.out.println("**** Testando delete ****");
+        sellerDao.deleteById(10);
+        sellers = sellerDao.findAll();
         for (Seller obj : sellers) System.out.println(obj);
-        System.out.println();
-
-        System.out.println("**** Testando findByDepartment ****");
-        Department dep = new Department(4,"Books");
-        List<Seller> sellers2 = sellerDao.findByDepartment(dep);
-        for (Seller obj : sellers2) System.out.println(obj);
-        System.out.println();
-
-        System.out.println("**** Testando findAll ****");
-        List<Seller> sellers3 = sellerDao.findAll();
-        for (Seller obj : sellers3) System.out.println(obj);
         System.out.println();
 
         DB.closeConnection();
