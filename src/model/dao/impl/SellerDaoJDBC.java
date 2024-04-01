@@ -91,11 +91,9 @@ public class SellerDaoJDBC implements SellerDao {
                     Statement.RETURN_GENERATED_KEYS);
 
             st.setInt(1, id);
-
-            int rowsAffected = st.executeUpdate();
         }
         catch (SQLException e) {
-            throw new DbException("Erro na criação, causado por: " + e.getMessage());
+            throw new DbException("Erro na remoção, causado por: " + e.getMessage());
         }
         finally {
             DB.closeStatement(st);
